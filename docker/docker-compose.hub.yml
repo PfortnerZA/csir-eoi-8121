@@ -1,0 +1,39 @@
+services:
+  app:
+    image: dgcartersa/csir-eoi-8121-app:${CSIR_TAG:-latest}
+    container_name: app
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - MQTT_URL=mqtt://mosquitto:1883
+      - MQTT_TOPIC=weather/open-meteo/current
+    depends_on:
+      - mosquitto
+
+  mosquitto:
+    image: dgcartersa/csir-eoi-8121-mosquitto:${CSIR_TAG:-latest}
+    container_name: mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ../lib/certs:/mosquitto/certs
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    restart: unless-stopped
+
+  service-worker:
+    image: dgcartersa/csir-eoi-8121-service-worker:${CSIR_TAG:-latest}
+    container_name: service-worker
+    environment:
+      - POLL_INTERVAL_MS=5000
+      - MQTT_URL=mqtt://mosquitto:1883
+      - MQTT_TOPIC=weather/open-meteo/current
+    depends_on:
+      - mosquitto
+
+volumes:
+  mosquitto_data:
+  mosquitto_log:

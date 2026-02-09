@@ -1,0 +1,15 @@
+{
+  "name": "service-worker",
+  "version": "1.0.0",
+  "description": "MQTT Weather API Service Worker",
+  "main": "service-worker.js",
+  "scripts": {
+    "start": "node service-worker.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "mqtt": "^5.5.0"
+  },
+  "author": "Darren Carter (Pfortner)",
+  "license": "ISC"
+}
